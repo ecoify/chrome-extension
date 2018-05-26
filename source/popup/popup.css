@@ -37,6 +37,16 @@ body.off {
   text-align: center;
 }
 
+.info_link {
+  position: absolute;
+  top: 1.4em;
+  right: 1.4em;
+}
+
+.info_link svg {
+  width: 1.8em;
+  height: 1.8em;
+}
 
 .content {
   width: 25em;
@@ -89,8 +99,8 @@ body.off {
 }
 
 .container.saved a:hover {
-  color: #aaa;
-  cursor: pointer;
+  /* color: #aaa;
+  cursor: pointer; */
 }
 
 /* Settings */
