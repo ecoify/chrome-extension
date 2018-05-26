@@ -15,6 +15,7 @@
   "permissions": [
    "activeTab",
    "webRequest",
+   "webRequestBlocking",
    "*://*.google.com/*",
    "*://*.google.de/*"
    ]
