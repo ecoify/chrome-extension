@@ -11,24 +11,43 @@ document.addEventListener('DOMContentLoaded', function() {
     toggle.checked = new_toggle;
     updateToggle(toggle.checked);
   });
-  toggle.addEventListener('click', function() {
+  toggle.addEventListener('click', function () {
     bgPage.setToggle(toggle.checked);
     updateToggle(toggle.checked);
   });
+
+  var settings = document.getElementById('settings');
+  settings.onclick = function () {
+    var x = document.getElementById("editor");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+  function saveSettings() {
+    const content = document.getElementById('editor_content').value
+    console.log(content)
+  }
+
+  document.getElementById('save_editor').onSubmit = function() {
+    console.log("hallol")
+  };
 
   // update carbon grams counter
   var carbon_grams = document.getElementById('carbon_grams');
   bgPage.readCounter().then((counter) => {
     console.log("read counter: ", counter);
-    new_carbon_grams = counter*0.2;
+    new_carbon_grams = counter * 0.2;
     var new_carbon_grams_text;
 
     if (new_carbon_grams < 1000) {
       new_carbon_grams_text = parseFloat((new_carbon_grams).toFixed(4)) + " g";
     } else if (new_carbon_grams < 1000000) {
-      new_carbon_grams_text = parseFloat((new_carbon_grams/1000).toFixed(4)) + " kg";
+      new_carbon_grams_text = parseFloat((new_carbon_grams / 1000).toFixed(4)) + " kg";
     } else {
-      new_carbon_grams_text = parseFloat((new_carbon_grams/1000000).toFixed(4)) + " t";
+      new_carbon_grams_text = parseFloat((new_carbon_grams / 1000000).toFixed(4)) + " t";
     }
 
     carbon_grams.innerHTML = new_carbon_grams_text;

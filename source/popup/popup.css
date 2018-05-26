@@ -188,3 +188,11 @@ body.off {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.settings.editor{
+  display:none;
+  text-align: center;
+}
+.settings.editor form {
+  text-align: center;
+}
