@@ -31,9 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(content)
   }
 
-  document.getElementById('save_editor').onSubmit = function() {
-    console.log("hallol")
-  };
+  document.getElementById('save_editor').addEventListener("submit", function (e) {
+    console.log("Hallol");
+    if (!isValid) {
+      e.preventDefault();    //stop form from submitting
+    };
+  }, false)
 
   // update carbon grams counter
   var carbon_grams = document.getElementById('carbon_grams');
