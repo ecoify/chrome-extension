@@ -24,6 +24,9 @@ body.off {
   background-color: #e44;
 }
 
+
+/* Head */
+
 .branding {
   margin: 0 0 0.7em 0;
   width: 100%;
@@ -43,10 +46,16 @@ body.off {
   right: 1.4em;
 }
 
+.info_link:focus {
+  outline:0 !important;
+}
+
 .info_link svg {
   width: 1.8em;
   height: 1.8em;
 }
+
+/* Content */
 
 .content {
   width: 25em;
@@ -72,7 +81,7 @@ body.off {
   display: table-cell;
   vertical-align: middle;
   text-align: right;
-  width: 50%;
+  width: 54%;
 }
 
 .container.toggle .switch_container {
