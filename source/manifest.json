@@ -9,9 +9,16 @@
    "default_icon": "icon.png",
    "default_popup": "popup.html"
   },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "all_frames": true,
+    "js":      ["content.js"]
+}],
   "permissions": [
    "activeTab",
    "webRequest",
-   "*://*.google.com/"
-   ]
+   "*://*.google.com/",
+   "*://*.google.de/"
+   ],
+   "content_security_policy": "script-src 'self' object-src 'self'"
 }
