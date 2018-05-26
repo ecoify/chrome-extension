@@ -27,7 +27,7 @@ const database = {
   'instagram.com': 'https://www.instagram.com/',
 }
 
-const callback = function (details) {
+function req_callback(details) {
   try {
     if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
       const term = details.url.match(/[&?]q=(.+?)&/)[1]
@@ -72,6 +72,24 @@ function setData(sKey, sValue) {
       }
     });
   });
+}
+
+function readToggle() {
+  return new Promise((resolve, reject) => {
+    getData("ecoify_toggle").then((ecoify_toggle) => {
+      if (typeof ecoify_toggle === 'undefined' || isNaN(ecoify_toggle)) {
+        ecoify_toggle = true;
+      }
+      resolve(ecoify_toggle)
+    })
+  })
+}
+
+function setToggle(new_ecoify_toggle) {
+  console.log("toggled to: ", new_ecoify_toggle);
+  if (new_ecoify_toggle === true || new_ecoify_toggle === false) {
+    setData("ecoify_toggle", new_ecoify_toggle);
+  }
 }
 
 function setAllRules(database) {
@@ -130,4 +148,24 @@ function increaseCounter() {
   )
 }
 
-chrome.webRequest.onBeforeRequest.addListener(callback, filter, extraInfoSpec);
+var req_listener_active = false;
+
+function addReqListener() {
+  if (req_listener_active) {
+    console.log("request event listener already active");
+  } else {
+    chrome.webRequest.onBeforeRequest.addListener(req_callback, filter, extraInfoSpec);
+    req_listener_active = true;
+    console.log("added request event listener");
+  }
+}
+
+function removeReqListener() {
+  if (req_listener_active) {
+    chrome.webRequest.onBeforeRequest.removeListener(req_callback);
+    req_listener_active = false;
+    console.log("removed request event listener");
+  } else {
+    console.log("request event listener is not active");
+  }
+}
