@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // background page
   var bgPage = chrome.extension.getBackgroundPage();
 
+  // init share buttons
+  bgPage.readCounter().then((counter) => {
+    var text = "I saved "+encodeURIComponent(countToCarbon(counter))+" CO2 using Ecoify for Chrome. Join now!";
+    document.getElementById('share_twitter').href = "https://twitter.com/intent/tweet/?text="+text+"&amp;url=https%3A%2F%2Fecoify.org%2F";
+  });
+
   // toggle
   var toggle = document.getElementById('toggle');
   bgPage.readToggle().then((new_toggle) => {
@@ -16,45 +22,29 @@ document.addEventListener('DOMContentLoaded', function() {
     updateToggle(toggle.checked);
   });
 
-  var settings = document.getElementById('settings');
-  settings.onclick = function () {
-    var x = document.getElementById("editor");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-  }
-
-  function saveSettings() {
-    const content = document.getElementById('editor_content').value
-    console.log(content)
-  }
-
-  document.getElementById('save_editor').onSubmit = function() {
-    console.log("hallol")
-  };
-
   // update carbon grams counter
   var carbon_grams = document.getElementById('carbon_grams');
   bgPage.readCounter().then((counter) => {
     console.log("read counter: ", counter);
-    new_carbon_grams = counter * 0.2;
-    var new_carbon_grams_text;
-
-    if (new_carbon_grams < 1000) {
-      new_carbon_grams_text = parseFloat((new_carbon_grams).toFixed(4)) + " g";
-    } else if (new_carbon_grams < 1000000) {
-      new_carbon_grams_text = parseFloat((new_carbon_grams / 1000).toFixed(4)) + " kg";
-    } else {
-      new_carbon_grams_text = parseFloat((new_carbon_grams / 1000000).toFixed(4)) + " t";
-    }
-
-    carbon_grams.innerHTML = new_carbon_grams_text;
+    carbon_grams.innerHTML = countToCarbon(counter);
   });
 
 }, false);
 
+function countToCarbon(count) {
+  new_carbon_grams = count * 0.2;
+
+  var new_carbon_grams_text;
+  if (new_carbon_grams < 1000) {
+    new_carbon_grams_text = parseFloat((new_carbon_grams).toFixed(4)) + " g";
+  } else if (new_carbon_grams < 1000000) {
+    new_carbon_grams_text = parseFloat((new_carbon_grams / 1000).toFixed(4)) + " kg";
+  } else {
+    new_carbon_grams_text = parseFloat((new_carbon_grams / 1000000).toFixed(4)) + " t";
+  }
+
+  return new_carbon_grams_text;
+}
 
 function updateToggle(toggle) {
   var body = document.getElementsByTagName("BODY")[0];
