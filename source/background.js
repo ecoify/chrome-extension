@@ -74,13 +74,54 @@ function setData(sKey, sValue) {
   });
 }
 
+function setAllRules(database) {
+  console.log("set database")
+  setData("rules", database)
+}
+
+function getAllRules() {
+  return new Promise((resolve, reject) => {
+    getData("rules").then((ruleset) => {
+      if (typeof ruleset === 'undefined') {
+        setAllRules(database)
+        resolve(database)
+      } else {
+        console.log(ruleset)
+        resolve(ruleset)
+      }
+    })
+  })
+}
+
+function createRule(source, target) {
+  return new Promise((resolve, reject) => {
+    getAllRules().then((ruleset) => {
+      if (source && target) {
+        console.log("add rule for", source, target)
+        ruleset[source] = target
+        setAllRules(ruleset)
+        resolve(true)
+      } else {
+        resolve(false)
+      }
+    })
+  })
+}
+
+function updateRule(source, target) {
+  createRule(source, target)
+}
+
+function deleteRule(source) {
+  updateRule(source, undefined)
+}
+
 function readCounter() {
   return new Promise((resolve, reject) => {
     getData("blockedCounter").then((counter) => {
       if (typeof counter === 'undefined' || isNaN(counter)) {
         counter = 0;
       }
-      console.log(counter)
       resolve(counter)
     })
   })
@@ -88,11 +129,7 @@ function readCounter() {
 
 function increaseCounter() {
   readCounter().then((counter) => {
-    var updatedCounter = counter + 1
-    setData("blockedCounter", updatedCounter).then(() => {
-      console.log("increased counter", updatedCounter)
-      readCounter()
-    })
+    setData("blockedCounter", counter + 1)
   })
 }
 
