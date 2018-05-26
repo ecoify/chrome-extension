@@ -33,8 +33,9 @@ const callback = function (details) {
     if (match) {
       const newUrl = database[match[1]];
       if (newUrl) {
+        increaseCounter()
         console.log('ecoify safed 2 g CO2 for: ', match[1]);
-        return {redirectUrl: newUrl};
+        return { redirectUrl: newUrl };
       }
     }
   }
@@ -42,7 +43,55 @@ const callback = function (details) {
     console.error(error);
   }
 };
-const filter =  {urls: ['*://*.google.de/*', '*://*.google.com/*']};
+const filter = { urls: ['*://*.google.de/*', '*://*.google.com/*'] };
 const extraInfoSpec = ['blocking'];
+
+function getData(sKey) {
+  return new Promise(function (resolve, reject) {
+    chrome.storage.sync.get(sKey, function (items) {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError.message);
+        reject(chrome.runtime.lastError.message);
+      } else {
+        resolve(items[sKey]);
+      }
+    });
+  });
+}
+
+function setData(sKey, sValue) {
+  return new Promise(function (resolve, reject) {
+    chrome.storage.sync.set({ sKey, sValue }, function () {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError.message);
+        reject(chrome.runtime.lastError.message);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
+
+function readCounter() {
+  return new Promise((resolve, reject) => {
+    getData("blockedCounter").then((counter) => {
+      if (typeof (counter) == undefined || isNaN(counter)) {
+        counter = 0;
+      }
+      console.log(counter)
+      resolve(counter)
+    })
+  })
+}
+
+function increaseCounter() {
+  readCounter().then((counter) => {
+    var updatedCounter = counter + 1
+    setData("blockedCounter", updatedCounter).then(() => {
+      console.log("increased counter", updatedCounter)
+      readCounter()
+    })
+  })
+}
 
 chrome.webRequest.onBeforeRequest.addListener(callback, filter, extraInfoSpec);

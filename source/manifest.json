@@ -7,7 +7,7 @@
 
   "browser_action": {
    "default_icon": "icon.png",
-   "default_popup": "popup/popup.html"
+   "default_popup": "popup.html"
   },
   "background": {
     "scripts": ["background.js"]
@@ -15,6 +15,7 @@
   "permissions": [
    "activeTab",
    "webRequest",
+   "storage",
    "webRequestBlocking",
    "*://*.google.com/*",
    "*://*.google.de/*"
