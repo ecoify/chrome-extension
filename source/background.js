@@ -77,7 +77,7 @@ function setData(sKey, sValue) {
 function readCounter() {
   return new Promise((resolve, reject) => {
     getData("blockedCounter").then((counter) => {
-      if (typeof (counter) == undefined || isNaN(counter)) {
+      if (typeof counter === 'undefined' || isNaN(counter)) {
         counter = 0;
       }
       console.log(counter)
