@@ -1,23 +1,28 @@
 {
   "manifest_version": 2,
-
   "name": "ecoify Plugin",
   "description": "This extension will eco-ify your browsing behaviour.",
   "version": "1.0",
-
+  "icons": {
+    "16": "assets/icon.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
   "browser_action": {
-   "default_icon": "assets/icon.png",
-   "default_popup": "popup/popup.html"
+    "default_icon": "assets/icon.png",
+    "default_popup": "popup/popup.html"
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "permissions": [
-   "activeTab",
-   "webRequest",
-   "storage",
-   "webRequestBlocking",
-   "*://*.google.com/*",
-   "*://*.google.de/*"
-   ]
+    "activeTab",
+    "webRequest",
+    "storage",
+    "webRequestBlocking",
+    "*://*.google.com/*",
+    "*://*.google.de/*"
+  ]
 }
