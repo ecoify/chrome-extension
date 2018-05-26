@@ -41,12 +41,20 @@ function updateToggle(toggle) {
   var body = document.getElementsByTagName("BODY")[0];
   var bgPage = chrome.extension.getBackgroundPage();
   if (toggle) {
+    // listener
     bgPage.addReqListener();
+    // popup background
     body.classList.remove('off');
     body.classList.add('on');
+    // icon
+    chrome.browserAction.setIcon({path: "../assets/icon_on_48.png"});
   } else {
+    // listener
     bgPage.removeReqListener();
+    // popup background
     body.classList.remove('on');
     body.classList.add('off');
+    // icon
+    chrome.browserAction.setIcon({path: "../assets/icon_off_48.png"});
   }
 }
