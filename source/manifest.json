@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "GTmetrix Analyzer Plugin",
-  "description": "This extension will analyze a page using GTmetrix",
+  "name": "ecoify Plugin",
+  "description": "This extension will eco-ify your browsing behaviour.",
   "version": "1.0",
 
   "browser_action": {
@@ -10,6 +10,8 @@
    "default_popup": "popup.html"
   },
   "permissions": [
-   "activeTab"
+   "activeTab",
+   "webRequest",
+   "*://*.google.com/"
    ]
 }
