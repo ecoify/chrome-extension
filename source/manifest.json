@@ -9,7 +9,6 @@
    "default_icon": "icon.png",
    "default_popup": "popup.html"
   },
-<<<<<<< HEAD
   "background": {
     "scripts": ["background.js"]
   },
@@ -18,19 +17,5 @@
    "webRequest",
    "*://*.google.com/*",
    "*://*.google.de/*"
-   ],
-   "content_security_policy": "script-src 'self' object-src 'self'"
-=======
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "all_frames": true,
-    "js":      ["content.js"]
-}],
-  "permissions": [
-   "activeTab",
-   "webRequest",
-   "*://*.google.com/",
-   "*://*.google.de/"
    ]
->>>>>>> 5cec79a2ee35421a92684c67aeea56e5cf94faa7
 }
