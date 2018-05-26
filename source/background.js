@@ -47,8 +47,8 @@ const filter = { urls: ['*://*.google.de/*', '*://*.google.com/*'] };
 const extraInfoSpec = ['blocking'];
 
 function getData(sKey) {
-  return new Promise(function (resolve, reject) {
-    chrome.storage.sync.get(sKey, function (items) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(sKey, (items) => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError.message);
         reject(chrome.runtime.lastError.message);
@@ -60,10 +60,11 @@ function getData(sKey) {
 }
 
 function setData(sKey, sValue) {
-  return new Promise(function (resolve, reject) {
-    var data = {};
-    data[sKey] = sValue;
-    chrome.storage.sync.set(data, function () {
+  return new Promise((resolve, reject) => {
+    const data = {
+      sKey: sValue,
+    };
+    chrome.storage.sync.set(data, () => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError.message);
         reject(chrome.runtime.lastError.message);
@@ -75,18 +76,16 @@ function setData(sKey, sValue) {
 }
 
 function setAllRules(database) {
-  console.log("set database")
-  setData("rules", database)
+  setData('rules', database)
 }
 
 function getAllRules() {
   return new Promise((resolve, reject) => {
-    getData("rules").then((ruleset) => {
+    getData('rules').then((ruleset) => {
       if (typeof ruleset === 'undefined') {
         setAllRules(database)
         resolve(database)
       } else {
-        console.log(ruleset)
         resolve(ruleset)
       }
     })
@@ -97,7 +96,6 @@ function createRule(source, target) {
   return new Promise((resolve, reject) => {
     getAllRules().then((ruleset) => {
       if (source && target) {
-        console.log("add rule for", source, target)
         ruleset[source] = target
         setAllRules(ruleset)
         resolve(true)
@@ -118,7 +116,7 @@ function deleteRule(source) {
 
 function readCounter() {
   return new Promise((resolve, reject) => {
-    getData("blockedCounter").then((counter) => {
+    getData('blockedCounter').then((counter) => {
       if (typeof counter === 'undefined' || isNaN(counter)) {
         counter = 0;
       }
@@ -128,9 +126,9 @@ function readCounter() {
 }
 
 function increaseCounter() {
-  readCounter().then((counter) => {
-    setData("blockedCounter", counter + 1)
-  })
+  readCounter().then((counter) =>
+    setData('blockedCounter', counter + 1)
+  )
 }
 
 chrome.webRequest.onBeforeRequest.addListener(callback, filter, extraInfoSpec);
