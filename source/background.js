@@ -29,12 +29,12 @@ const database = {
 
 const callback = function (details) {
   try {
-    const match = details.url.match(/&oq=(.+?)&/);
-    if (match) {
-      const newUrl = database[match[1]];
+    if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
+      const term = details.url.match(/[&?]q=(.+?)&/)[1]
+      const newUrl = database[term];
       if (newUrl) {
         increaseCounter()
-        console.log('ecoify safed 2 g CO2 for: ', match[1]);
+        console.log('ecoify safed 2 g CO2 for: ', term);
         return { redirectUrl: newUrl };
       }
     }
