@@ -9,16 +9,14 @@
    "default_icon": "icon.png",
    "default_popup": "popup.html"
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "all_frames": true,
-    "js":      ["content.js"]
-}],
+  "background": {
+    "scripts": ["background.js"]
+  },
   "permissions": [
    "activeTab",
    "webRequest",
-   "*://*.google.com/",
-   "*://*.google.de/"
+   "*://*.google.com/*",
+   "*://*.google.de/*"
    ],
    "content_security_policy": "script-src 'self' object-src 'self'"
 }
