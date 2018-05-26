@@ -7,7 +7,7 @@ window.onload = function () {
   // update carbon grams counter
   readCounter().then((counter) => {
     console.log("read counter: ", counter);
-    new_carbon_grams = counter*2;
+    new_carbon_grams = counter*0.2;
     var new_carbon_grams_text;
 
     if (new_carbon_grams < 1000) {

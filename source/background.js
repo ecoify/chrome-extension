@@ -34,7 +34,7 @@ const callback = function (details) {
       const newUrl = database[term];
       if (newUrl) {
         increaseCounter()
-        console.log('ecoify safed 2 g CO2 for: ', term);
+        console.log('ecoify safed 0.2 g CO2 for: ', term);
         return { redirectUrl: newUrl };
       }
     }
