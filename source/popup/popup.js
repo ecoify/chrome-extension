@@ -11,11 +11,19 @@ window.onload = function () {
     var new_carbon_grams_text;
 
     if (new_carbon_grams < 1000) {
+<<<<<<< HEAD
       new_carbon_grams_text = parseFloat((new_carbon_grams).toFixed(4)) + "g";
     } else if (new_carbon_grams < 1000000) {
       new_carbon_grams_text = parseFloat((new_carbon_grams/1000).toFixed(4)) + "kg";
     } else {
       new_carbon_grams_text = parseFloat((new_carbon_grams/1000000).toFixed(4)) + "t";
+=======
+      new_carbon_grams_text = new_carbon_grams+" g";
+    } else if (new_carbon_grams < 1000000) {
+      new_carbon_grams_text = new_carbon_grams/1000 + " kg";
+    } else {
+      new_carbon_grams_text = new_carbon_grams_text/1000000 + " t";
+>>>>>>> 97b7d0ddd185d1f547b0a47508c51f4ada7fa8f1
     }
 
     carbon_grams.innerHTML = new_carbon_grams_text;
