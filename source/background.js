@@ -61,9 +61,8 @@ function getData(sKey) {
 
 function setData(sKey, sValue) {
   return new Promise((resolve, reject) => {
-    const data = {
-      sKey: sValue,
-    };
+    const data = {}
+    data[sKey] = sValue
     chrome.storage.sync.set(data, () => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError.message);
