@@ -11,11 +11,11 @@ window.onload = function () {
     var new_carbon_grams_text;
 
     if (new_carbon_grams < 1000) {
-      new_carbon_grams_text = new_carbon_grams+"g";
+      new_carbon_grams_text = parseFloat((new_carbon_grams).toFixed(4)) + "g";
     } else if (new_carbon_grams < 1000000) {
-      new_carbon_grams_text = new_carbon_grams/1000 + "kg";
+      new_carbon_grams_text = parseFloat((new_carbon_grams/1000).toFixed(4)) + "kg";
     } else {
-      new_carbon_grams_text = new_carbon_grams_text/1000000 + "t";
+      new_carbon_grams_text = parseFloat((new_carbon_grams/1000000).toFixed(4)) + "t";
     }
 
     carbon_grams.innerHTML = new_carbon_grams_text;
