@@ -34,7 +34,6 @@ function req_callback(details) {
       const newUrl = database[term];
       if (newUrl) {
         increaseCounter()
-        console.log('ecoify safed 0.2 g CO2 for: ', term);
         return { redirectUrl: newUrl };
       }
     }
@@ -86,7 +85,6 @@ function readToggle() {
 }
 
 function setToggle(new_ecoify_toggle) {
-  console.log("toggled to: ", new_ecoify_toggle);
   if (new_ecoify_toggle === true || new_ecoify_toggle === false) {
     setData("ecoify_toggle", new_ecoify_toggle);
   }
@@ -151,13 +149,10 @@ function increaseCounter() {
 var req_listener_active = false;
 
 function addReqListener() {
-  if (req_listener_active) {
-    console.log("request event listener already active");
-  } else {
+  if (!req_listener_active) {
     chrome.webRequest.onBeforeRequest.addListener(req_callback, filter, extraInfoSpec);
     req_listener_active = true;
     setToggle(true);
-    console.log("added request event listener");
   }
   chrome.browserAction.setIcon({path: "../assets/icon_on_48.png"});
 }
@@ -167,9 +162,6 @@ function removeReqListener() {
     chrome.webRequest.onBeforeRequest.removeListener(req_callback);
     req_listener_active = false;
     setToggle(false);
-    console.log("removed request event listener");
-  } else {
-    console.log("request event listener is not active");
   }
   chrome.browserAction.setIcon({path: "../assets/icon_off_48.png"});
 }
@@ -179,17 +171,13 @@ function startup() {
   const togglePromise = readToggle();
 
   togglePromise.then((toggle) => {
-    console.log("startup, toggle: ", toggle);
-
     if (toggle) {
       addReqListener();
     } else {
       removeReqListener();
     }
   });
-  
+
 }
 
-
-// startup
 startup();
