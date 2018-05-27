@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "ecoify Plugin",
   "description": "This extension will eco-ify your browsing behaviour.",
-  "version": "1.0",
+  "version": "1.1",
   "icons": {
     "32": "assets/icon_on_32.png",
     "48": "assets/icon_on_48.png",
