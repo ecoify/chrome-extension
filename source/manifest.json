@@ -1,7 +1,7 @@
 {
-  "name": "ecoify",
+  "short_name": "ecoify",
   "manifest_version": 2,
-  "name": "ecoify Plugin",
+  "name": "Ecoify Extension",
   "description": "This extension will eco-ify your browsing behaviour.",
   "version": "1.1",
   "icons": {
