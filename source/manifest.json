@@ -1,4 +1,5 @@
 {
+  "name": "ecoify",
   "manifest_version": 2,
   "name": "ecoify Plugin",
   "description": "This extension will eco-ify your browsing behaviour.",

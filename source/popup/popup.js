@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateToggle(toggle.checked);
   });
   toggle.addEventListener('click', function () {
-    bgPage.setToggle(toggle.checked);
     updateToggle(toggle.checked);
   });
 
@@ -55,15 +54,11 @@ function updateToggle(toggle) {
     // popup background
     body.classList.remove('off');
     body.classList.add('on');
-    // icon
-    chrome.browserAction.setIcon({path: "../assets/icon_on_48.png"});
   } else {
     // listener
     bgPage.removeReqListener();
     // popup background
     body.classList.remove('on');
     body.classList.add('off');
-    // icon
-    chrome.browserAction.setIcon({path: "../assets/icon_off_48.png"});
   }
 }

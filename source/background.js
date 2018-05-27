@@ -156,16 +156,40 @@ function addReqListener() {
   } else {
     chrome.webRequest.onBeforeRequest.addListener(req_callback, filter, extraInfoSpec);
     req_listener_active = true;
+    setToggle(true);
     console.log("added request event listener");
   }
+  chrome.browserAction.setIcon({path: "../assets/icon_on_48.png"});
 }
 
 function removeReqListener() {
   if (req_listener_active) {
     chrome.webRequest.onBeforeRequest.removeListener(req_callback);
     req_listener_active = false;
+    setToggle(false);
     console.log("removed request event listener");
   } else {
     console.log("request event listener is not active");
   }
+  chrome.browserAction.setIcon({path: "../assets/icon_off_48.png"});
 }
+
+// Init
+function startup() {
+  const togglePromise = readToggle();
+
+  togglePromise.then((toggle) => {
+    console.log("startup, toggle: ", toggle);
+
+    if (toggle) {
+      addReqListener();
+    } else {
+      removeReqListener();
+    }
+  });
+  
+}
+
+
+// startup
+startup();
