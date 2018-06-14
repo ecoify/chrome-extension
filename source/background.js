@@ -26,15 +26,20 @@ const database = {
   'instagram': 'https://www.instagram.com/',
   'instagram.com': 'https://www.instagram.com/',
 }
+setData('ecoDatabase', database)
 
+let data = {}
+getData('ecoDatabase')
+.then(result => {
+  data = result
+ })
 function req_callback(details) {
   try {
     if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
       const term = details.url.match(/[&?]q=(.+?)&/)[1]
-      const newUrl = database[term];
-      if (newUrl) {
+      if (data && data[term]) {
         increaseCounter()
-        return { redirectUrl: newUrl };
+        return { redirectUrl: data[term] };
       }
     }
   }
