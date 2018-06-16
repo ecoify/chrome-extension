@@ -1,4 +1,5 @@
-const database = {
+// defaults
+const redirects_default = {
   'facebook': 'https://www.facebook.com/',
   'fb': 'https://www.facebook.com/',
   'facebook log in': 'https://www.facebook.com/',
@@ -25,30 +26,23 @@ const database = {
   'ebay.com': 'https://www.ebay.com/',
   'instagram': 'https://www.instagram.com/',
   'instagram.com': 'https://www.instagram.com/',
-}
-setData('ecoDatabase', database)
+};
+var req_listener_active = false;
 
-let data = {}
-getData('ecoDatabase')
-.then(result => {
-  data = result
- })
-function req_callback(details) {
-  try {
-    if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
-      const term = details.url.match(/[&?]q=(.+?)&/)[1]
-      if (data && data[term]) {
-        increaseCounter()
-        return { redirectUrl: data[term] };
+// get redirects
+function loadRedirectsTo(redirects_obj) {
+  return chrome.storage.sync.get(
+    {'redirects': redirects_default},
+    (items) => {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError.message);
+        reject(chrome.runtime.lastError.message);
+      } else {
+         redirects_obj = items['redirects'];
       }
     }
-  }
-  catch (error) {
-    console.error(error);
-  }
-};
-const filter = { urls: ['*://*.google.de/*', '*://*.google.com/*'] };
-const extraInfoSpec = ['blocking'];
+  );
+}
 
 function getData(sKey) {
   return new Promise((resolve, reject) => {
@@ -95,6 +89,8 @@ function setToggle(new_ecoify_toggle) {
   }
 }
 
+// update Rules API – not using: see options
+/*
 function setAllRules(database) {
   setData('rules', database)
 }
@@ -133,6 +129,7 @@ function updateRule(source, target) {
 function deleteRule(source) {
   updateRule(source, undefined)
 }
+*/
 
 function readCounter() {
   return new Promise((resolve, reject) => {
@@ -151,11 +148,27 @@ function increaseCounter() {
   )
 }
 
-var req_listener_active = false;
+function req_callback(details) {
+  try {
+    if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
+      const term = details.url.match(/[&?]q=(.+?)&/)[1]
+      if (this.redirects && this.redirects[term]) {
+        increaseCounter()
+        return { redirectUrl: this.redirects[term] };
+      }
+    }
+  }
+  catch (error) {
+    console.error(error);
+  }
+};
 
+const filter = { urls: ['*://*.google.de/*', '*://*.google.com/*'] };
+const extraInfoSpec = ['blocking'];
 function addReqListener() {
   if (!req_listener_active) {
-    chrome.webRequest.onBeforeRequest.addListener(req_callback, filter, extraInfoSpec);
+    chrome.webRequest.onBeforeRequest.addListener(req_callback, filter,
+      extraInfoSpec);
     req_listener_active = true;
     setToggle(true);
   }
@@ -172,9 +185,12 @@ function removeReqListener() {
 }
 
 // Init
-function startup() {
-  const togglePromise = readToggle();
+var startup = () => {
+  // get redirects
+  loadRedirectsTo(this.redirects);
 
+  // toggle
+  const togglePromise = readToggle();
   togglePromise.then((toggle) => {
     if (toggle) {
       addReqListener();
@@ -182,7 +198,6 @@ function startup() {
       removeReqListener();
     }
   });
-
 }
 
 startup();

@@ -34,10 +34,15 @@ body {
   text-align: left;
 }
 
-#redirect-textarea {
+#redirects-text {
+  width: 30em;
+
+  overflow: scroll;
   outline: none;
-  resize: none;
-  white-space: nowrap;
+  white-space: pre;
+
+  font-size: 1.2em;
+  text-align: left;
 }
 
 /* Save */
