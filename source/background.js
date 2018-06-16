@@ -204,6 +204,7 @@ function increaseCounter() {
         var xhr = new XMLHttpRequest();
         xhr.open("PUT", 'https://5tepzfsmxg.execute-api.eu-central-1.amazonaws.com/dev/carbon/' + userId, true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
         xhr.send(JSON.stringify(data));
         console.log('sent data for ' + userId + ' to server');
       }
