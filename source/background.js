@@ -13,6 +13,7 @@ const redirects_default = {
   'youtube': 'https://www.youtube.com/',
   'youtube.com': 'https://www.youtube.com/',
   'youtube.de': 'https://www.youtube.de/',
+  'pinterest': 'https://www.pinterest.de/',
   'gmx': 'https://www.gmx.net/',
   'gmx.net': 'https://www.gmx.net/',
   'gmx.de': 'https://www.gmx.de/',
