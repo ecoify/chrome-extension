@@ -141,6 +141,17 @@ function deleteRule(source) {
   updateRule(source, undefined)
 }
 
+function getUserConsent() {
+  return new Promise((resolve, reject) => {
+    getData('stats_consent').then((consent) => {
+      if (typeof consent === 'undefined') {
+        consent = false;
+      }
+      resolve(consent)
+    })
+  })
+}
+
 function setBrowserId() {
   var browserId = Date.now() + '-' + Math.floor(Math.random() * Math.floor(Date.now()));
   setData('browserId', browserId)
@@ -175,13 +186,15 @@ function increaseCounter() {
     setData('blockedCounter', thisCounter);
     console.log('counter was ' + thisCounter)
     if (thisCounter % 11 == 0) {
-      var data = {};
-      data.carbon = thisCounter * 0.2;
-      var xhr = new XMLHttpRequest();
-      xhr.open("PUT", 'https://5tepzfsmxg.execute-api.eu-central-1.amazonaws.com/dev/carbon/' + userId, true);
-      xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-      xhr.send(JSON.stringify(data));
-      console.log('sent data for ' + userId + ' to server')
+      if (getUserConsent()) {
+        var data = {};
+        data.carbon = thisCounter * 0.2;
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", 'https://5tepzfsmxg.execute-api.eu-central-1.amazonaws.com/dev/carbon/' + userId, true);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        xhr.send(JSON.stringify(data));
+        console.log('sent data for ' + userId + ' to server')
+      }
     }
   })
 }
