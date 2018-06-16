@@ -1,45 +1,13 @@
-// default redirect options
-const redirects_default = {
-  'facebook': 'https://www.facebook.com/',
-  'fb': 'https://www.facebook.com/',
-  'facebook log in': 'https://www.facebook.com/',
-  'facebook login': 'https://www.facebook.com/',
-  'facebook.com': 'https://www.facebook.com/',
-  'facebook.de': 'https://www.facebook.de/',
-  'stackoverflow': 'https://stackoverflow.com/',
-  'stackoverflow.com': 'https://stackoverflow.com/',
-  'netflix': 'https://www.netflix.com/',
-  'netflix.com': 'https://www.netflix.com/',
-  'youtube': 'https://www.youtube.com/',
-  'youtube.com': 'https://www.youtube.com/',
-  'youtube.de': 'https://www.youtube.de/',
-  'gmx': 'https://www.gmx.net/',
-  'gmx.net': 'https://www.gmx.net/',
-  'gmx.de': 'https://www.gmx.de/',
-  'amazon': 'https://www.amazon.com/',
-  'amazon.com': 'https://www.amazon.com/',
-  'wikipedia': 'https://wikipedia.org/',
-  'wikipedia.de': 'https://wikipedia.de/',
-  'twitter': 'https://twitter.com/',
-  'twitter.com': 'https://twitter.com/',
-  'ebay': 'https://www.ebay.com/',
-  'ebay.com': 'https://www.ebay.com/',
-  'instagram': 'https://www.instagram.com/',
-  'instagram.com': 'https://www.instagram.com/',
-};
-
 // background page
 bgPage = chrome.extension.getBackgroundPage();
 
 // Saves options to chrome.storage
 function save_options() {
-
   // redirects
-  var parse_json_error = false;
-  var redirect_text = document.getElementById('redirects-text').value;
-  var newRedirects = {};
+  let parse_json_error = false;
+  let newRedirects = {};
   try {
-    newRedirects = JSON.parse(redirect_text);
+    newRedirects = JSON.parse(document.getElementById('redirects-text').value);
   } catch(e) {
     //console.log("Error parsing JSON: ", e);
     parse_json_error = true;
@@ -49,10 +17,10 @@ function save_options() {
   }
 
   // stats
-  var stats_consent = document.getElementById('stats-checkbox').checked;
+  const stats_consent = document.getElementById('stats-checkbox').checked;
   bgPage.setStatsConsent(stats_consent);
 
-  var status = document.getElementById('status');
+  const status = document.getElementById('status');
   if (parse_json_error) {
     status.style.color = 'red';
     status.textContent = 'Error parsing JSON. NOT SAVED! Check your JSON.';
@@ -69,14 +37,9 @@ function save_options() {
 // loads options from chrome.storage
 function restore_options() {
   // redirects
-  var redirects = bgPage.getRedirects();
   document.getElementById('redirects-text').value =
-    JSON.stringify(redirects, null, " ");
-
-  // stats consent
-  var stats_consent = bgPage.getStatsConsent();
-  document.getElementById('stats-checkbox').checked = stats_consent;
-
+    JSON.stringify(bgPage.getRedirects(), null, " ");
+  document.getElementById('stats-checkbox').checked = bgPage.getStatsConsent();
 }
 
 // init
