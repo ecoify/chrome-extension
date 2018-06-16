@@ -30,15 +30,15 @@ const redirects_default = {
 var req_listener_active = false;
 
 // get redirects
-function loadRedirectsTo(redirects_obj) {
-  return chrome.storage.sync.get(
+function loadRedirects() {
+  chrome.storage.sync.get(
     {'redirects': redirects_default},
     (items) => {
       if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError.message);
         reject(chrome.runtime.lastError.message);
       } else {
-         redirects_obj = items['redirects'];
+         this.redirects = items['redirects'];
       }
     }
   );
@@ -187,7 +187,7 @@ function removeReqListener() {
 // Init
 var startup = () => {
   // get redirects
-  loadRedirectsTo(this.redirects);
+  loadRedirects();
 
   // toggle
   const togglePromise = readToggle();

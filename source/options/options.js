@@ -28,14 +28,16 @@ const redirects_default = {
   'instagram.com': 'https://www.instagram.com/',
 };
 
+// background page
+var bgPage = chrome.extension.getBackgroundPage();
+
 // Saves options to chrome.storage
 function save_options() {
-  // new settings
   newSettings = {};
 
   // redirects
   var parse_json_error = false;
-  var redirect_text = document.getElementById('redirects-text').innerHTML;
+  var redirect_text = document.getElementById('redirects-text').value;
   var newRedirects = {};
   try {
     newRedirects = JSON.parse(redirect_text);
@@ -43,13 +45,17 @@ function save_options() {
     console.log("Error parsing JSON: ", e);
     parse_json_error = true;
   }
-  if (newRedirects !== {}) {
+  if (newRedirects != {}) {
     newSettings['redirects'] = newRedirects;
+    bgPage.loadRedirects();
   }
 
   // stats
   var stats_concent = document.getElementById('stats-checkbox').checked;
   newSettings['stats_concent'] = stats_concent;
+
+
+  console.log("newSettings: ", newSettings);
 
   // set
   chrome.storage.sync.set(newSettings, function() {
@@ -61,22 +67,22 @@ function save_options() {
     } else {
       status.style.color = 'green';
       status.textContent = 'Options saved.';
-      setTimeout(function() {
+      /*setTimeout(function() {
         status.textContent = '';
-      }, 1500);
+      }, 1500);*/
     }
   });
 }
 
 // loads options from chrome.storage
 function restore_options() {
-  chrome.storage.sync.get({
-    stats_consent: true,
-    redirects: redirects_default
-  }, function(items) {
+  chrome.storage.sync.get([
+    'stats_consent',
+    'redirects']
+  , function(items) {
     document.getElementById('stats-checkbox').checked = items.stats_consent;
-    document.getElementById('redirects-text').innerHTML =
-      JSON.stringify(items.redirects, null, "\t");
+    document.getElementById('redirects-text').value =
+      JSON.stringify(items.redirects, null, " ");
   });
 }
 
