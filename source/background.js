@@ -29,29 +29,45 @@ const redirects_default = {
 };
 var req_listener_active = false;
 
-// get redirects
-function loadRedirects() {
-  chrome.storage.sync.get(
-    {'redirects': redirects_default},
-    (items) => {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError.message);
-        reject(chrome.runtime.lastError.message);
-      } else {
-         this.redirects = items['redirects'];
-         console.log("loaded redirects: ", this.redirects);
-      }
-    }
-  );
-}
+// redirects
 
 function getRedirects() {
+  console.log("red: ", this.redirects);
   return this.redirects;
 }
 
 function setRedirects(redirects) {
   this.redirects = redirects;
+    console.log("set red: ", this.redirects);
   setData('redirects', redirects);
+}
+
+// stats_consent
+
+function getStatsConsent() {
+  console.log("sc: ", this.stats_consent);
+  return this.stats_consent;
+}
+
+function setStatsConsent(stats_consent) {
+  this.stats_consent = stats_consent;
+    console.log("set sc: ", this.stats_consent);
+  setData('stats_consent', stats_consent);
+}
+
+function getDataWithDefault(sKey, default_value) {
+  return new Promise((resolve, reject) => {
+    var data = {}
+    data[sKey] = default_value;
+    chrome.storage.sync.get(data, (items) => {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError.message);
+        reject(chrome.runtime.lastError.message);
+      } else {
+        resolve(items[sKey]);
+      }
+    });
+  });
 }
 
 function getData(sKey) {
@@ -197,7 +213,16 @@ function removeReqListener() {
 // Init
 var startup = () => {
   // get redirects
-  loadRedirects();
+  getDataWithDefault('redirects', redirects_default)
+  .then((redirects) => {
+    this.redirects = redirects;
+  });
+
+  // get stats_consent
+  getDataWithDefault('stats_consent', true)
+  .then((stats_consent) => {
+    this.stats_consent = stats_consent;
+  });
 
   // toggle
   const togglePromise = readToggle();

@@ -44,16 +44,14 @@ function save_options() {
     console.log("Error parsing JSON: ", e);
     parse_json_error = true;
   }
-  if (newRedirects != {}) {
+  if (!parse_json_error) {
     bgPage.setRedirects(newRedirects);
     console.log("Set new redirects: ", newRedirects);
   }
 
   // stats
   var stats_consent = document.getElementById('stats-checkbox').checked;
-
-  // set
-  chrome.storage.sync.set({stats_cencent: stats_consent});
+  bgPage.setStatsConsent(stats_consent);
 
   var status = document.getElementById('status');
   if (parse_json_error) {
@@ -62,9 +60,10 @@ function save_options() {
   } else {
     status.style.color = 'green';
     status.textContent = 'Options saved.';
-    /*setTimeout(function() {
+    setTimeout(function() {
       status.textContent = '';
-    }, 1500);*/
+      window.close();
+    }, 1500);
   }
 }
 
@@ -77,12 +76,8 @@ function restore_options() {
   console.log("redir: ", redirects);
 
   // stats consent
-  chrome.storage.sync.get({
-    'stats_consent': true
-  }
-  , function(items) {
-    document.getElementById('stats-checkbox').checked = items.stats_consent;
-  });
+  var stats_consent = bgPage.getStatsConsent();
+  document.getElementById('stats-checkbox').checked = stats_consent;
 
 }
 
