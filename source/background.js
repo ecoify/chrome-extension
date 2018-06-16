@@ -39,26 +39,22 @@ getBrowserId()
 
 // redirects
 function getRedirects() {
-  console.log("red: ", this.redirects);
   return this.redirects;
 }
 
 function setRedirects(redirects) {
   this.redirects = redirects;
-    console.log("set red: ", this.redirects);
   setData('redirects', redirects);
 }
 
 // stats_consent
 
 function getStatsConsent() {
-  console.log("sc: ", this.stats_consent);
   return this.stats_consent;
 }
 
 function setStatsConsent(stats_consent) {
   this.stats_consent = stats_consent;
-    console.log("set sc: ", this.stats_consent);
   setData('stats_consent', stats_consent);
 }
 
@@ -196,7 +192,7 @@ function increaseCounter() {
   readCounter().then((counter) => {
     const thisCounter = counter + 1
     setData('blockedCounter', thisCounter);
-    console.log('counter was ' + thisCounter)
+    //console.log('counter was ' + thisCounter)
     if (thisCounter % 11 == 0) {
       if (this.stats_consent) {
         var data = {};
@@ -205,7 +201,7 @@ function increaseCounter() {
         xhr.open("PUT", 'https://5tepzfsmxg.execute-api.eu-central-1.amazonaws.com/dev/carbon/' + userId, true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         xhr.send(JSON.stringify(data));
-        console.log('sent data for ' + userId + ' to server');
+        //console.log('sent data for ' + userId + ' to server');
       }
     }
   })

@@ -41,12 +41,11 @@ function save_options() {
   try {
     newRedirects = JSON.parse(redirect_text);
   } catch(e) {
-    console.log("Error parsing JSON: ", e);
+    //console.log("Error parsing JSON: ", e);
     parse_json_error = true;
   }
   if (!parse_json_error) {
     bgPage.setRedirects(newRedirects);
-    console.log("Set new redirects: ", newRedirects);
   }
 
   // stats
@@ -73,7 +72,6 @@ function restore_options() {
   var redirects = bgPage.getRedirects();
   document.getElementById('redirects-text').value =
     JSON.stringify(redirects, null, " ");
-  console.log("redir: ", redirects);
 
   // stats consent
   var stats_consent = bgPage.getStatsConsent();
