@@ -1,4 +1,5 @@
-const database = {
+// defaults
+const redirects_default = {
   'facebook': 'https://www.facebook.com/',
   'fb': 'https://www.facebook.com/',
   'facebook log in': 'https://www.facebook.com/',
@@ -12,6 +13,7 @@ const database = {
   'youtube': 'https://www.youtube.com/',
   'youtube.com': 'https://www.youtube.com/',
   'youtube.de': 'https://www.youtube.de/',
+  'pinterest': 'https://www.pinterest.de/',
   'gmx': 'https://www.gmx.net/',
   'gmx.net': 'https://www.gmx.net/',
   'gmx.de': 'https://www.gmx.de/',
@@ -25,37 +27,55 @@ const database = {
   'ebay.com': 'https://www.ebay.com/',
   'instagram': 'https://www.instagram.com/',
   'instagram.com': 'https://www.instagram.com/',
-}
-setData('ecoDatabase', database)
+};
+var req_listener_active = false;
 
-let data = {}
-getData('ecoDatabase')
-  .then(result => {
-    data = result
-  })
-
-let userId = '';
+// user/browser ID
+userId = '';
 getBrowserId()
   .then(result => {
     userId = result;
   })
 
-function req_callback(details) {
-  try {
-    if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
-      const term = details.url.match(/[&?]q=(.+?)&/)[1]
-      if (data && data[term]) {
-        increaseCounter()
-        return { redirectUrl: data[term] };
+// redirects
+function getRedirects() {
+  console.log("red: ", this.redirects);
+  return this.redirects;
+}
+
+function setRedirects(redirects) {
+  this.redirects = redirects;
+    console.log("set red: ", this.redirects);
+  setData('redirects', redirects);
+}
+
+// stats_consent
+
+function getStatsConsent() {
+  console.log("sc: ", this.stats_consent);
+  return this.stats_consent;
+}
+
+function setStatsConsent(stats_consent) {
+  this.stats_consent = stats_consent;
+    console.log("set sc: ", this.stats_consent);
+  setData('stats_consent', stats_consent);
+}
+
+function getDataWithDefault(sKey, default_value) {
+  return new Promise((resolve, reject) => {
+    var data = {}
+    data[sKey] = default_value;
+    chrome.storage.sync.get(data, (items) => {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError.message);
+        reject(chrome.runtime.lastError.message);
+      } else {
+        resolve(items[sKey]);
       }
-    }
-  }
-  catch (error) {
-    console.error(error);
-  }
-};
-const filter = { urls: ['*://*.google.de/*', '*://*.google.com/*'] };
-const extraInfoSpec = ['blocking'];
+    });
+  });
+}
 
 function getData(sKey) {
   return new Promise((resolve, reject) => {
@@ -102,6 +122,8 @@ function setToggle(new_ecoify_toggle) {
   }
 }
 
+// update Rules API – not using: see options
+/*
 function setAllRules(database) {
   setData('rules', database)
 }
@@ -140,17 +162,7 @@ function updateRule(source, target) {
 function deleteRule(source) {
   updateRule(source, undefined)
 }
-
-function getUserConsent() {
-  return new Promise((resolve, reject) => {
-    getData('stats_consent').then((consent) => {
-      if (typeof consent === 'undefined') {
-        consent = false;
-      }
-      resolve(consent)
-    })
-  })
-}
+*/
 
 function setBrowserId() {
   var browserId = Date.now() + '-' + Math.floor(Math.random() * Math.floor(Date.now()));
@@ -186,7 +198,7 @@ function increaseCounter() {
     setData('blockedCounter', thisCounter);
     console.log('counter was ' + thisCounter)
     if (thisCounter % 11 == 0) {
-      if (getUserConsent()) {
+      if (this.stats_concent) {
         var data = {};
         data.carbon = thisCounter * 0.2;
         var xhr = new XMLHttpRequest();
@@ -199,11 +211,27 @@ function increaseCounter() {
   })
 }
 
-var req_listener_active = false;
+function req_callback(details) {
+  try {
+    if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
+      const term = details.url.match(/[&?]q=(.+?)&/)[1]
+      if (this.redirects && this.redirects[term]) {
+        increaseCounter()
+        return { redirectUrl: this.redirects[term] };
+      }
+    }
+  }
+  catch (error) {
+    console.error(error);
+  }
+};
 
+const filter = { urls: ['*://*.google.de/*', '*://*.google.com/*'] };
+const extraInfoSpec = ['blocking'];
 function addReqListener() {
   if (!req_listener_active) {
-    chrome.webRequest.onBeforeRequest.addListener(req_callback, filter, extraInfoSpec);
+    chrome.webRequest.onBeforeRequest.addListener(req_callback, filter,
+      extraInfoSpec);
     req_listener_active = true;
     setToggle(true);
   }
@@ -220,9 +248,22 @@ function removeReqListener() {
 }
 
 // Init
-function startup() {
-  const togglePromise = readToggle();
+var startup = () => {
 
+  // get redirects
+  getDataWithDefault('redirects', redirects_default)
+    .then((redirects) => {
+      this.redirects = redirects;
+    });
+
+  // get stats_consent
+  getDataWithDefault('stats_consent', true)
+    .then((stats_consent) => {
+      this.stats_consent = stats_consent;
+    });
+
+  // toggle
+  const togglePromise = readToggle();
   togglePromise.then((toggle) => {
     if (toggle) {
       addReqListener();
@@ -230,7 +271,6 @@ function startup() {
       removeReqListener();
     }
   });
-
 }
 
 startup();
