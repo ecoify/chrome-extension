@@ -55,6 +55,21 @@ body.off {
   height: 1.8em;
 }
 
+#options_link {
+  position: absolute;
+  top: 1.4em;
+  left: 1.4em;
+}
+
+#options_link:focus {
+  outline:0 !important;
+}
+
+#options_link svg {
+  width: 1.8em;
+  height: 1.8em;
+}
+
 /* Content */
 
 .content {

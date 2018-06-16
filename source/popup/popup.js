@@ -1,3 +1,4 @@
+// popup opened
 document.addEventListener('DOMContentLoaded', function() {
 
   console.log("ecoify popup opened");
@@ -9,6 +10,15 @@ document.addEventListener('DOMContentLoaded', function() {
   bgPage.readCounter().then((counter) => {
     var text = "I saved "+encodeURIComponent(countToCarbon(counter))+" CO2 using Ecoify for Chrome. Join now!";
     document.getElementById('share_twitter').href = "https://twitter.com/intent/tweet/?text="+text+"&amp;url=https%3A%2F%2Fecoify.org%2F";
+  });
+
+  // options page
+  document.getElementById('options_link').addEventListener('click', function() {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL('options/options.html'));
+    }
   });
 
   // toggle
