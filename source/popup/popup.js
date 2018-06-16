@@ -1,8 +1,5 @@
 // popup opened
 document.addEventListener('DOMContentLoaded', function() {
-
-  console.log("ecoify popup opened");
-
   // background page
   var bgPage = chrome.extension.getBackgroundPage();
 
@@ -34,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // update carbon grams counter
   var carbon_grams = document.getElementById('carbon_grams');
   bgPage.readCounter().then((counter) => {
-    console.log("read counter: ", counter);
     carbon_grams.innerHTML = countToCarbon(counter);
   });
 
