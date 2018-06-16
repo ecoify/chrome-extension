@@ -198,14 +198,14 @@ function increaseCounter() {
     setData('blockedCounter', thisCounter);
     console.log('counter was ' + thisCounter)
     if (thisCounter % 11 == 0) {
-      if (this.stats_concent) {
+      if (this.stats_consent) {
         var data = {};
         data.carbon = thisCounter * 0.2;
         var xhr = new XMLHttpRequest();
         xhr.open("PUT", 'https://5tepzfsmxg.execute-api.eu-central-1.amazonaws.com/dev/carbon/' + userId, true);
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         xhr.send(JSON.stringify(data));
-        console.log('sent data for ' + userId + ' to server')
+        console.log('sent data for ' + userId + ' to server');
       }
     }
   })
