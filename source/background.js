@@ -30,9 +30,16 @@ setData('ecoDatabase', database)
 
 let data = {}
 getData('ecoDatabase')
-.then(result => {
-  data = result
- })
+  .then(result => {
+    data = result
+  })
+
+let userId = '';
+getBrowserId()
+  .then(result => {
+    userId = result;
+  })
+
 function req_callback(details) {
   try {
     if (/[&?]q=(.+?)&/.test(details.url) && /[&?]oq=(.+?)&/.test(details.url)) {
@@ -134,6 +141,23 @@ function deleteRule(source) {
   updateRule(source, undefined)
 }
 
+function setBrowserId() {
+  var browserId = Date.now() + '-' + Math.floor(Math.random() * Math.floor(Date.now()));
+  setData('browserId', browserId)
+  return browserId
+}
+
+function getBrowserId() {
+  return new Promise((resolve, reject) => {
+    getData('browserId').then((browserId) => {
+      if (typeof browserId === 'undefined') {
+        browserId = setBrowserId();
+      }
+      resolve(browserId)
+    })
+  })
+}
+
 function readCounter() {
   return new Promise((resolve, reject) => {
     getData('blockedCounter').then((counter) => {
@@ -146,9 +170,20 @@ function readCounter() {
 }
 
 function increaseCounter() {
-  readCounter().then((counter) =>
-    setData('blockedCounter', counter + 1)
-  )
+  readCounter().then((counter) => {
+    const thisCounter = counter + 1
+    setData('blockedCounter', thisCounter);
+    console.log('counter was ' + thisCounter)
+    if (thisCounter % 11 == 0) {
+      var data = {};
+      data.carbon = thisCounter * 0.2;
+      var xhr = new XMLHttpRequest();
+      xhr.open("PUT", 'https://5tepzfsmxg.execute-api.eu-central-1.amazonaws.com/dev/carbon/' + userId, true);
+      xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+      xhr.send(JSON.stringify(data));
+      console.log('sent data for ' + userId + ' to server')
+    }
+  })
 }
 
 var req_listener_active = false;
@@ -159,7 +194,7 @@ function addReqListener() {
     req_listener_active = true;
     setToggle(true);
   }
-  chrome.browserAction.setIcon({path: "../assets/icon_on_48.png"});
+  chrome.browserAction.setIcon({ path: "../assets/icon_on_48.png" });
 }
 
 function removeReqListener() {
@@ -168,7 +203,7 @@ function removeReqListener() {
     req_listener_active = false;
     setToggle(false);
   }
-  chrome.browserAction.setIcon({path: "../assets/icon_off_48.png"});
+  chrome.browserAction.setIcon({ path: "../assets/icon_off_48.png" });
 }
 
 // Init
