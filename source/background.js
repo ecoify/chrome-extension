@@ -39,9 +39,19 @@ function loadRedirects() {
         reject(chrome.runtime.lastError.message);
       } else {
          this.redirects = items['redirects'];
+         console.log("loaded redirects: ", this.redirects);
       }
     }
   );
+}
+
+function getRedirects() {
+  return this.redirects;
+}
+
+function setRedirects(redirects) {
+  this.redirects = redirects;
+  setData('redirects', redirects);
 }
 
 function getData(sKey) {

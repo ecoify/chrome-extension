@@ -29,11 +29,10 @@ const redirects_default = {
 };
 
 // background page
-var bgPage = chrome.extension.getBackgroundPage();
+bgPage = chrome.extension.getBackgroundPage();
 
 // Saves options to chrome.storage
 function save_options() {
-  newSettings = {};
 
   // redirects
   var parse_json_error = false;
@@ -46,44 +45,45 @@ function save_options() {
     parse_json_error = true;
   }
   if (newRedirects != {}) {
-    newSettings['redirects'] = newRedirects;
-    bgPage.loadRedirects();
+    bgPage.setRedirects(newRedirects);
+    console.log("Set new redirects: ", newRedirects);
   }
 
   // stats
-  var stats_concent = document.getElementById('stats-checkbox').checked;
-  newSettings['stats_concent'] = stats_concent;
-
-
-  console.log("newSettings: ", newSettings);
+  var stats_consent = document.getElementById('stats-checkbox').checked;
 
   // set
-  chrome.storage.sync.set(newSettings, function() {
-    // Show status to user
-    var status = document.getElementById('status');
-    if (parse_json_error) {
-      status.style.color = 'red';
-      status.textContent = 'Error parsing JSON. NOT SAVED! Check your JSON.';
-    } else {
-      status.style.color = 'green';
-      status.textContent = 'Options saved.';
-      /*setTimeout(function() {
-        status.textContent = '';
-      }, 1500);*/
-    }
-  });
+  chrome.storage.sync.set({stats_cencent: stats_consent});
+
+  var status = document.getElementById('status');
+  if (parse_json_error) {
+    status.style.color = 'red';
+    status.textContent = 'Error parsing JSON. NOT SAVED! Check your JSON.';
+  } else {
+    status.style.color = 'green';
+    status.textContent = 'Options saved.';
+    /*setTimeout(function() {
+      status.textContent = '';
+    }, 1500);*/
+  }
 }
 
 // loads options from chrome.storage
 function restore_options() {
-  chrome.storage.sync.get([
-    'stats_consent',
-    'redirects']
+  // redirects
+  var redirects = bgPage.getRedirects();
+  document.getElementById('redirects-text').value =
+    JSON.stringify(redirects, null, " ");
+  console.log("redir: ", redirects);
+
+  // stats consent
+  chrome.storage.sync.get({
+    'stats_consent': true
+  }
   , function(items) {
     document.getElementById('stats-checkbox').checked = items.stats_consent;
-    document.getElementById('redirects-text').value =
-      JSON.stringify(items.redirects, null, " ");
   });
+
 }
 
 // init
